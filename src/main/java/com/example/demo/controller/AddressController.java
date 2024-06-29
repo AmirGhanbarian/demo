@@ -2,7 +2,11 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.AddressDto;
 import com.example.demo.exception.AddressNotFoundException;
+import com.example.demo.helper.DtoHelper;
 import com.example.demo.model.Address;
+import com.example.demo.model.response.ResponseBuilderDemo;
+import com.example.demo.model.response.ResponseDemo;
+import com.example.demo.model.response.ResponseErrorDemo;
 import com.example.demo.repository.AddressRepository;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,37 +14,58 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/address")
 public class AddressController {
 
-    @Autowired
-    AddressRepository addressRepository;
+    final AddressRepository addressRepository;
 
+    public AddressController(AddressRepository addressRepository) {
+        this.addressRepository = addressRepository;
+    }
 
 
     @PostMapping
-    public Object addAddress(@RequestBody AddressDto addressDto) {
+    public ResponseDemo<Address> addAddress(@RequestBody AddressDto addressDto) {
 
         try {
-            val address=Address.builder()
-                    .address(addressDto.getAddress())
+            return new ResponseBuilderDemo<Address>()
+                    .addData(addressRepository.save(DtoHelper.addressOf(addressDto)))
                     .build();
-            return addressRepository.save(address);
-
-        }catch (Exception e){
-            return HttpClientErrorException.create(HttpStatusCode.valueOf(500),
-                    "Error while creating entity", null, null, null);
+        } catch (Exception e) {
+            return new ResponseBuilderDemo<Address>().fail().build();
         }
-
-
     }
 
     @ExceptionHandler(AddressNotFoundException.class)
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public Optional<Address> getAddressById(@PathVariable Long id) {
-        return addressRepository.findById(id);
+    public ResponseDemo<Address> getAddressById(@PathVariable Long id) {
+        val result = addressRepository.findById(id);
+        return addressRepository.findById(id).isPresent() ?
+                new ResponseBuilderDemo<Address>().addData(result.get()).build() :
+                new ResponseBuilderDemo<Address>()
+                        .error(new ResponseErrorDemo("404", "not found"))
+                        .build();
+
+    }
+
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public ResponseDemo<ArrayList<Address>> getAllAddresses() {
+        val result = addressRepository.findAll();
+        ArrayList<Address> list = new ArrayList<>();
+        result.iterator().forEachRemaining(list::add);
+        return new ResponseBuilderDemo<ArrayList<Address>>().addData(list).build();
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    public ResponseDemo<String> deleteById(@PathVariable Long id) {
+        addressRepository.deleteById(id);
+        //TODO validation Of deletion should be placed Here
+        //isContains
+        return new ResponseBuilderDemo<String>().success().build();
     }
 }
