@@ -2,21 +2,17 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.AddressDto;
 import com.example.demo.exception.AddressNotFoundException;
-import com.example.demo.helper.DtoHelper;
+import com.example.demo.helper.DtoConvertor;
 import com.example.demo.model.Address;
 import com.example.demo.model.response.ResponseBuilderDemo;
 import com.example.demo.model.response.ResponseDemo;
 import com.example.demo.model.response.ResponseErrorDemo;
 import com.example.demo.repository.AddressRepository;
 import lombok.val;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/address")
@@ -34,7 +30,7 @@ public class AddressController {
 
         try {
             return new ResponseBuilderDemo<Address>()
-                    .addData(addressRepository.save(DtoHelper.addressOf(addressDto)))
+                    .addData(addressRepository.save(DtoConvertor.addressOf(addressDto)))
                     .build();
         } catch (Exception e) {
             return new ResponseBuilderDemo<Address>().fail().build();

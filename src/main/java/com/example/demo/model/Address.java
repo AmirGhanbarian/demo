@@ -2,28 +2,31 @@ package com.example.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name= "demo_address")
+@Table(name = "demo_address")
 @Getter
-@NoArgsConstructor
-@Builder
 public class Address {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
 
     @Column(name = "address_address")
     private String address;
 
-    public Address(Long id,String address) {
+    @ManyToOne
+    @JoinColumn(name = "demo_user")
+    @JsonIgnore
+    private DemoUser demo_user;
+
+    public Address() {
+
+    }
+
+    public Address(String address) {
         this.address = address;
-        this.id=id;
     }
 
 

@@ -3,12 +3,14 @@ package com.example.demo.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table( name = "demo_usertb")
 @Getter
+@Setter
 public class DemoUser {
 
     @Id
@@ -18,8 +20,6 @@ public class DemoUser {
     @Column(name = "user_username")
     String username;
 
-    @Column(name = "user_address")
-
-    @OneToMany(mappedBy = "address")
-    private Set<Address> address;
+    @OneToMany(mappedBy = "demo_user")
+    private List<Address> address;
 }
