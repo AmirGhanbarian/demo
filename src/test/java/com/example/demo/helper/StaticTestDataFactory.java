@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.helper;
 
 import com.example.demo.dto.AddressDto;
 import lombok.val;

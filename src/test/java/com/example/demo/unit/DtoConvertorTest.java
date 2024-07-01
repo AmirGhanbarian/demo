@@ -1,7 +1,7 @@
 package com.example.demo.unit;
 
-import com.example.demo.StaticTestDataFactory;
 import com.example.demo.helper.DtoConvertor;
+import com.example.demo.helper.StaticTestDataFactory;
 import lombok.val;
 import org.junit.Test;
 

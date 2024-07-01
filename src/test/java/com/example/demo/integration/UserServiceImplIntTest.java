@@ -1,7 +1,7 @@
 package com.example.demo.integration;
 
-import com.example.demo.StaticTestDataFactory;
 import com.example.demo.dto.UserDto;
+import com.example.demo.helper.StaticTestDataFactory;
 import com.example.demo.integration.context.BaseIntTest;
 import com.example.demo.service.UserServiceImpl;
 import lombok.val;
