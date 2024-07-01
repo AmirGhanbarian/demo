@@ -2,11 +2,17 @@ package com.example.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "demo_address")
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Address {
 
     @Id
@@ -16,14 +22,10 @@ public class Address {
     @Column(name = "address_address")
     private String address;
 
-    @ManyToOne
-    @JoinColumn(name = "demo_user")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "demo_user_id")
     @JsonIgnore
     private DemoUser demo_user;
-
-    public Address() {
-
-    }
 
     public Address(String address) {
         this.address = address;

@@ -16,6 +16,20 @@ public class DtoConvertor {
 
     }
 
+
+    public static List<Address> addressDtoListToAddressList(List<AddressDto> addressDtoList) {
+        List<Address> addressList = new ArrayList<>();
+        if (Helper.nonNull(addressDtoList)) {
+            for (val addressDto : addressDtoList) {
+                addressList.add(Address.builder()
+                        .address(addressDto.getAddress())
+                        .build());
+            }
+            return addressList;
+        }
+        return new ArrayList<>();
+    }
+
     public static DemoUser demoUserOf(UserDto userDto) {
         val demoUser = new DemoUser();
         List<Address> addressList = new ArrayList<>();
